@@ -31,7 +31,9 @@ function startUp() {
     connObjList.push(connObj);
     connObj.on('data', (data: any) => {
       if (data.type == "heartBeat") {
-        console.log('data', data);
+        if (!!localStorage.shotHeartBeat) {
+          console.log('data', data);
+        }
         return;
       }
       if (data.type == "send") {
