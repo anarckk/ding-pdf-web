@@ -19,12 +19,12 @@ function startUp() {
     return;
   }
   connectStatus.value = 1;
-  notification['info']({message: '正在自启动中', description: '向信令服务器申请自身ID中...', duration: 10});
+  notification['info']({message: '正在自启动中', description: '向信令服务器申请自身ID中...'});
   let peer = new Peer(serverId);
   peer.on('open', function (id) {
     connectStatus.value = 2;
     console.log('peer open', id);
-    notification['info']({message: '自启动成功', description: '注册自身成功,ID为' + id, duration: 10});
+    notification['info']({message: '自启动成功', description: '注册自身成功,ID为' + id});
   });
   peer.on('connection', (connObj) => {
     console.log('connection ', connObj);
@@ -43,7 +43,7 @@ function startUp() {
         param.append("uploadFile", file);
         let bb: ResponseType = 'blob';
         let config = {headers: {"Content-Type": "multipart/form-data"}, responseType: bb}
-        axios.post("http://localhost:8080/pdf/upload", param, config).then((res) => {
+        axios.post("http://pet.anarckk.me:8080/pdf/upload", param, config).then((res) => {
           console.log("res", res);
           console.log('res.headers', res.headers);
           let fileName = res.headers['content-disposition'].split(';')[1].split('=')[1].replace(/\"/g, '');
@@ -63,7 +63,7 @@ function startUp() {
   peer.on('error', function (err) {
     connectStatus.value = 3;
     console.log('peer error', err);
-    notification['error']({message: '出现错误', description: JSON.stringify(err), duration: null});
+    notification['error']({message: '出现错误', description: JSON.stringify(err)});
   });
 }
 

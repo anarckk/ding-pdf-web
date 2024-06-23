@@ -26,12 +26,10 @@ function selfOpen() {
   }
   peerStatus = 1;
   connectStatus.value = 1;
-  // notification['info']({message: '正在自启动中', description: '向信令服务器申请自身ID中...', duration: 10});
   peer = new Peer();
   peer.on('open', function (id) {
     console.log('peer open', id);
     peerStatus = 2;
-    // notification['info']({message: '自启动成功', description: '注册自身成功,ID为' + id, duration: 10});
     connectServer();
   });
   peer.on('error', function (err) {
@@ -39,20 +37,17 @@ function selfOpen() {
     connectStatus.value = 3;
     if (err.type == 'disconnected') {
       peerStatus = 3;
-      // notification['error']({message: '和信令服务器断开', description: JSON.stringify(err), duration: null});
       return
     }
     if (err.type == "peer-unavailable") {
       connectServerStatus = 3;
       notification['error']({
         message: '连接pdf服务器失败，请稍后重试',
-        description: JSON.stringify(err),
-        duration: null
+        description: JSON.stringify(err)
       });
       return
     }
     peerStatus = 3;
-    // notification['error']({message: '出现错误', description: JSON.stringify(err), duration: null});
   });
 }
 
@@ -62,7 +57,6 @@ function connectServer() {
   }
   connectStatus.value = 1;
   connectServerStatus = 1;
-  // notification['info']({message: '与服务器建立连接', description: '与服务器建立连接...', duration: 10});
   let connObj: DataConnection = peer.connect(serverId);
   console.log('peer 连接 ' + serverId);
   let interval: number;
@@ -70,7 +64,7 @@ function connectServer() {
     console.log('connObj open');
     connectServerStatus = 2;
     connectStatus.value = 2;
-    notification['info']({message: '连接服务器成功', duration: 10});
+    notification['info']({message: '连接服务器成功'});
     interval = setInterval(() => {
       connObj.send({"type": "heartBeat"});
     }, 1000);
@@ -106,7 +100,6 @@ function connectServer() {
     connectServerStatus = 3;
     console.log('connObj error', err);
     connectStatus.value = 3;
-    // notification['error']({message: '连接服务器失败', description: JSON.stringify(err), duration: 10});
     clearInterval(interval);
   })
 }
