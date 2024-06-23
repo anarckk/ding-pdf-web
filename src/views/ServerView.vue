@@ -44,7 +44,7 @@ function startUp() {
         param.append("uploadFile", file);
         let bb: ResponseType = 'blob';
         let config = {headers: {"Content-Type": "multipart/form-data"}, responseType: bb}
-        axios.post("http://pet.anarckk.me:8080/pdf/upload", param, config).then((res) => {
+        axios.post("https://pet.anarckk.me:20396/pdf/upload", param, config).then((res) => {
           console.log("res", res);
           console.log('res.headers', res.headers);
           let fileName = res.headers['content-disposition'].split(';')[1].split('=')[1].replace(/\"/g, '');
