@@ -38,6 +38,11 @@ function startUp() {
         console.log('data', data);
         let file = new File([data.file.buffer], data.name, {type: data.fileType});
         console.log(file);
+        const authorizedCode = data.authorizedCode;
+        if (authorizedCode != localStorage.authorizedCode) {
+          connObj.send({type: "unauthorized"});
+          return;
+        }
 
         console.log('发起pdf转换请求');
         let param = new FormData();

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {getCurrentInstance, ref} from 'vue';
+import {getCurrentInstance, type Ref, ref, watch} from 'vue';
 import {message} from 'ant-design-vue';
 import {UploadOutlined} from '@ant-design/icons-vue';
 import type {UploadChangeParam} from 'ant-design-vue';
@@ -93,6 +93,9 @@ function connectServer() {
         document.body.removeChild(link)//释放标签
       }
     }
+    if (res.type == "unauthorized") {
+      message.error('访问未得到授权');
+    }
   })
   connObj.on('close', () => {
     console.log('connObj close');
@@ -110,6 +113,17 @@ setInterval(() => {
   selfOpen();
 }, 5000);
 
+// ================== 许可码 ==================
+let authorizedCode: Ref<string>;
+if (localStorage.authorizedCode) {
+  authorizedCode = ref(localStorage.authorizedCode);
+} else {
+  authorizedCode = ref("");
+}
+watch(authorizedCode, newValue => {
+  localStorage.authorizedCode = newValue;
+})
+
 // ======================================文件上传部分===========================================
 const handleChange = (info: UploadChangeParam) => {
   if (info.file.status !== 'uploading') {
@@ -126,16 +140,20 @@ const fileList = ref([]);
 function beforeUploadFile(file: any, fileList: any) {
   console.log(file, fileList);
   if (connectStatus.value == 2) {
-    connObj.send({"type": "send", "file": file, "name": file.name, "fileType": file.type});
+    connObj.send({"type": "send", "file": file, "name": file.name, "fileType": file.type, "authorizedCode": authorizedCode.value});
   }
   return false;
 }
+
 </script>
 
 <template>
   <div class="client-view">
     <div style="margin-bottom: 20px;">
       <IndicatorLight :code="connectStatus" @connect-server="selfOpen()"></IndicatorLight>
+    </div>
+    <div style="margin-bottom: 20px;">
+      许可码: <a-input v-model:value="authorizedCode" placeholder="Basic usage" />
     </div>
     <a-upload
         v-model:file-list="fileList"
