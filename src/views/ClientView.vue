@@ -51,13 +51,14 @@ function selfOpen() {
   });
 }
 
+let connObj: DataConnection;
 function connectServer() {
   if (peerStatus != 2 || connectServerStatus == 1 || connectServerStatus == 2) {
     return;
   }
   connectStatus.value = 1;
   connectServerStatus = 1;
-  let connObj: DataConnection = peer.connect(serverId);
+  connObj = peer.connect(serverId);
   console.log('peer 连接 ' + serverId);
   let interval: number;
   connObj.on('open', () => {
