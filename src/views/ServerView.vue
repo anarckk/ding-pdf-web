@@ -43,7 +43,7 @@ function startUp() {
         let param = new FormData();
         param.append("uploadFile", file);
         let bb: ResponseType = 'blob';
-        let config = {headers: {"Content-Type": "multipart/form-data"}, responseType: bb}
+        let config = {headers: {"Content-Type": "multipart/form-data"}, responseType: bb, rejectUnauthorized: false}
         axios.post("https://pet.anarckk.me:20396/pdf/upload", param, config).then((res) => {
           console.log("res", res);
           console.log('res.headers', res.headers);
